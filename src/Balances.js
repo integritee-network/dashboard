@@ -1,81 +1,61 @@
 import React, { useEffect, useState } from 'react'
-import { Table, Grid, Button, Label } from 'semantic-ui-react'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { Table, Grid, Label } from 'semantic-ui-react'
 import { useSubstrateState } from './substrate-lib'
 
 export default function Main(props) {
-  const { api, keyring } = useSubstrateState()
-  const accounts = keyring.getPairs()
-  const [balances, setBalances] = useState({})
-
-  useEffect(() => {
-    const addresses = keyring.getPairs().map(account => account.address)
+    const { api } = useSubstrateState()
+    const [enclaves, setEnclaves] = useState({})
     let unsubscribeAll = null
 
-    api.query.system.account
-      .multi(addresses, balances => {
-        const balancesMap = addresses.reduce(
-          (acc, address, index) => ({
-            ...acc,
-            [address]: balances[index].data.free.toHuman(),
-          }),
-          {}
-        )
-        setBalances(balancesMap)
-      })
-      .then(unsub => {
-        unsubscribeAll = unsub
-      })
-      .catch(console.error)
+    useEffect(() => {
+        api.query.teerex.sovereignEnclaves.entries().then((enclaves) => {
+            const p = enclaves.map(enclave => {
+                return {
+                    signer: enclave[0].toHuman(),
+                    url: enclave[1].url,
+                    fingerprint: enclave[1].fingerprint
+                }
+            })
+            setEnclaves(p)
+        })
+            .then(unsub => {
+            unsubscribeAll = unsub
+        })
+            .catch(console.error)
+        return () => unsubscribeAll && unsubscribeAll()
+    }, [api, setEnclaves()])
 
-    return () => unsubscribeAll && unsubscribeAll()
-  }, [api, keyring, setBalances])
-
-  return (
+    return (
     <Grid.Column>
-      <h1>Balances</h1>
-      {accounts.length === 0 ? (
+      <h1>Enclaves</h1>
+      {enclaves.length === 0 ? (
         <Label basic color="yellow">
-          No accounts to be shown
+          No enclaves to be shown
         </Label>
       ) : (
         <Table celled striped size="small">
           <Table.Body>
             <Table.Row>
               <Table.Cell width={3} textAlign="right">
-                <strong>Name</strong>
+                <strong>Signer</strong>
               </Table.Cell>
               <Table.Cell width={10}>
-                <strong>Address</strong>
+                <strong>Url</strong>
               </Table.Cell>
               <Table.Cell width={3}>
-                <strong>Balance</strong>
+                <strong>Fingerprint</strong>
               </Table.Cell>
             </Table.Row>
-            {accounts.map(account => (
-              <Table.Row key={account.address}>
+            {enclaves.map(enclave => (
+              <Table.Row key={enclave.signer}>
                 <Table.Cell width={3} textAlign="right">
-                  {account.meta.name}
+                  {enclave.signer}
                 </Table.Cell>
                 <Table.Cell width={10}>
-                  <span style={{ display: 'inline-block', minWidth: '31em' }}>
-                    {account.address}
-                  </span>
-                  <CopyToClipboard text={account.address}>
-                    <Button
-                      basic
-                      circular
-                      compact
-                      size="mini"
-                      color="blue"
-                      icon="copy outline"
-                    />
-                  </CopyToClipboard>
+                  {enclave.url}
                 </Table.Cell>
                 <Table.Cell width={3}>
-                  {balances &&
-                    balances[account.address] &&
-                    balances[account.address]}
+                    {enclave.fingerprint}
                 </Table.Cell>
               </Table.Row>
             ))}
@@ -83,5 +63,5 @@ export default function Main(props) {
         </Table>
       )}
     </Grid.Column>
-  )
+    )
 }
