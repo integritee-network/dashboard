@@ -8,10 +8,10 @@ export default function Main(props) {
     let unsubscribeAll = null
 
     useEffect(() => {
-        api.query.teerex.sovereignEnclaves.entries().then((enclaves) => {
+        api.query.teerex.proxiedEnclaves.entries().then((enclaves) => {
             const e = enclaves.map(enclave => {
                 return {
-                    signer: enclave[0].toHuman(),
+                    signer: enclave[0].toHuman().signer,
                     url: enclave[1].toHuman().Sgx.url,
                     fingerprint: enclave[1].toHuman().Sgx.mrEnclave,
                     buildMode: enclave[1].toHuman().Sgx.buildMode,
