@@ -4,26 +4,26 @@ import { useSubstrateState } from './substrate-lib'
 
 export default function Main(props) {
     const { api } = useSubstrateState()
-    const [enclaves, setEnclaves] = useState({})
+    const [enclaves, setEnclaves] = useState([])
     let unsubscribeAll = null
 
     useEffect(() => {
         api.query.teerex.sovereignEnclaves.entries().then((enclaves) => {
-            const p = enclaves.map(enclave => {
+            const e = enclaves.map(enclave => {
                 return {
                     signer: enclave[0].toHuman(),
                     url: enclave[1].url,
                     fingerprint: enclave[1].fingerprint
                 }
             })
-            setEnclaves(p)
+            setEnclaves(e)
         })
             .then(unsub => {
             unsubscribeAll = unsub
         })
             .catch(console.error)
         return () => unsubscribeAll && unsubscribeAll()
-    }, [api, setEnclaves()])
+    }, [api])
 
     return (
     <Grid.Column>
