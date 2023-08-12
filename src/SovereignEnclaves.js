@@ -14,7 +14,12 @@ export default function Main(props) {
                     signer: enclave[0].toHuman(),
                     url: enclave[1].toHuman().Sgx.url,
                     fingerprint: enclave[1].toHuman().Sgx.mrEnclave,
-                    buildMode: enclave[1].toHuman().Sgx.buildMode,
+                    vendor: enclave[1].toHuman().Sgx.mrSigner,
+                    buildMode: enclave[1].unwrap().asSgx.buildMode.type,
+                    reportData : enclave[1].unwrap().asSgx.reportData.d,
+                    attestationMethod: enclave[1].unwrap().asSgx.attestationMethod.type,
+                    attestationStatus: enclave[1].unwrap().asSgx.status.type,
+                    attestationTimestamp: new Date( enclave[1].unwrap().asSgx.timestamp * 1).toString(),
                 }
             })
             setEnclaves(e)
@@ -56,9 +61,11 @@ export default function Main(props) {
                   {enclave.url}
                 </Table.Cell>
                 <Table.Cell width={3}>
-                    <p>MRENCALVE: {enclave.fingerprint}</p>
-                    <p>attestation method: {enclave.attestationMethod}</p>
+                    <p>fingerprint (MRENCALVE): {enclave.fingerprint}</p>
+                    <p>vendor (MRSIGNER): {enclave.vendor}</p>
                     <p>build mode: {enclave.buildMode}</p>
+                    <p>attestation: method: {enclave.attestationMethod}, status: {enclave.attestationStatus}</p>
+                    <p>attestation timestamp: {enclave.attestationTimestamp}</p>
                 </Table.Cell>
               </Table.Row>
             ))}

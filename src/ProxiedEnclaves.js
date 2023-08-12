@@ -11,10 +11,16 @@ export default function Main(props) {
         api.query.teerex.proxiedEnclaves.entries().then((enclaves) => {
             const e = enclaves.map(enclave => {
                 return {
-                    signer: enclave[0].toHuman().signer,
+                    signer: enclave[0].toHuman()[0].signer.Opaque.slice(0,(32)*2+2), //assume signer is a 32bit key
+                    registrar: enclave[0].toHuman()[0].registrar,
                     url: enclave[1].toHuman().Sgx.url,
                     fingerprint: enclave[1].toHuman().Sgx.mrEnclave,
-                    buildMode: enclave[1].toHuman().Sgx.buildMode,
+                    vendor: enclave[1].toHuman().Sgx.mrSigner,
+                    buildMode: enclave[1].unwrap().asSgx.buildMode.type,
+                    reportData : enclave[1].unwrap().asSgx.reportData.d,
+                    attestationMethod: enclave[1].unwrap().asSgx.attestationMethod.type,
+                    attestationStatus: enclave[1].unwrap().asSgx.status.type,
+                    attestationTimestamp: new Date( enclave[1].unwrap().asSgx.timestamp * 1).toString(),
                 }
             })
             setProxiedEnclaves(e)
@@ -50,15 +56,18 @@ export default function Main(props) {
             {proxiedEnclaves.map(enclave => (
               <Table.Row key={enclave.signer}>
                 <Table.Cell width={3} textAlign="right">
-                  {enclave.signer}
+                    <p>{enclave.signer}</p>
+                    <p>(proxied by) {enclave.registrar}</p>
                 </Table.Cell>
                 <Table.Cell width={10}>
                   {enclave.url}
                 </Table.Cell>
                 <Table.Cell width={3}>
-                    <p>MRENCALVE: {enclave.fingerprint}</p>
-                    <p>attestation method: {enclave.attestationMethod}</p>
+                    <p>fingerprint (MRENCALVE): {enclave.fingerprint}</p>
+                    <p>vendor (MRSIGNER): {enclave.vendor}</p>
                     <p>build mode: {enclave.buildMode}</p>
+                    <p>attestation: method: {enclave.attestationMethod}, status: {enclave.attestationStatus}</p>
+                    <p>attestation timestamp: {enclave.attestationTimestamp}</p>
                 </Table.Cell>
               </Table.Row>
             ))}
