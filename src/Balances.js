@@ -12,8 +12,9 @@ export default function Main(props) {
             const e = enclaves.map(enclave => {
                 return {
                     signer: enclave[0].toHuman(),
-                    url: enclave[1].url,
-                    fingerprint: enclave[1].fingerprint
+                    url: enclave[1].toHuman().Sgx.url,
+                    fingerprint: enclave[1].toHuman().Sgx.mrEnclave,
+                    buildMode: enclave[1].toHuman().Sgx.buildMode,
                 }
             })
             setEnclaves(e)
@@ -27,7 +28,7 @@ export default function Main(props) {
 
     return (
     <Grid.Column>
-      <h1>Enclaves</h1>
+      <h1>Sovereign Enclaves</h1>
       {enclaves.length === 0 ? (
         <Label basic color="yellow">
           No enclaves to be shown
@@ -43,7 +44,7 @@ export default function Main(props) {
                 <strong>Url</strong>
               </Table.Cell>
               <Table.Cell width={3}>
-                <strong>Fingerprint</strong>
+                <strong>Properties</strong>
               </Table.Cell>
             </Table.Row>
             {enclaves.map(enclave => (
@@ -55,7 +56,9 @@ export default function Main(props) {
                   {enclave.url}
                 </Table.Cell>
                 <Table.Cell width={3}>
-                    {enclave.fingerprint}
+                    <p>MRENCALVE: {enclave.fingerprint}</p>
+                    <p>attestation method: {enclave.attestationMethod}</p>
+                    <p>build mode: {enclave.buildMode}</p>
                 </Table.Cell>
               </Table.Row>
             ))}
