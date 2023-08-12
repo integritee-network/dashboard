@@ -13,7 +13,8 @@ import { SubstrateContextProvider, useSubstrateState } from './substrate-lib'
 import { DeveloperConsole } from './substrate-lib/components'
 
 import AccountSelector from './AccountSelector'
-import Balances from './Balances'
+import SovereignEnclaves from './SovereignEnclaves'
+import ProxiedEnclaves from './ProxiedEnclaves'
 import BlockNumber from './BlockNumber'
 import Events from './Events'
 import Interactor from './Interactor'
@@ -71,7 +72,10 @@ function Main() {
             <BlockNumber finalized />
           </Grid.Row>
           <Grid.Row stretched>
-            <Balances />
+            <SovereignEnclaves />
+          </Grid.Row>
+          <Grid.Row stretched>
+            <ProxiedEnclaves />
           </Grid.Row>
           <Grid.Row>
             <Transfer />
