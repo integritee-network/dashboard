@@ -4,7 +4,6 @@ import {
   Dimmer,
   Loader,
   Grid,
-  Sticky,
   Message,
 } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
@@ -12,17 +11,12 @@ import 'semantic-ui-css/semantic.min.css'
 import { SubstrateContextProvider, useSubstrateState } from './substrate-lib'
 import { DeveloperConsole } from './substrate-lib/components'
 
-import AccountSelector from './AccountSelector'
 import SovereignEnclaves from './SovereignEnclaves'
 import ProxiedEnclaves from './ProxiedEnclaves'
 import BlockNumber from './BlockNumber'
 import Events from './Events'
-import Interactor from './Interactor'
 import Metadata from './Metadata'
 import NodeInfo from './NodeInfo'
-import TemplateModule from './TemplateModule'
-import Transfer from './Transfer'
-import Upgrade from './Upgrade'
 
 function Main() {
   const { apiState, apiError, keyringState } = useSubstrateState()
@@ -60,9 +54,6 @@ function Main() {
 
   return (
     <div ref={contextRef}>
-      <Sticky context={contextRef}>
-        <AccountSelector />
-      </Sticky>
       <Container>
         <Grid stackable columns="equal">
           <Grid.Row stretched>
@@ -78,15 +69,7 @@ function Main() {
             <ProxiedEnclaves />
           </Grid.Row>
           <Grid.Row>
-            <Transfer />
-            <Upgrade />
-          </Grid.Row>
-          <Grid.Row>
-            <Interactor />
             <Events />
-          </Grid.Row>
-          <Grid.Row>
-            <TemplateModule />
           </Grid.Row>
         </Grid>
       </Container>
