@@ -4,7 +4,7 @@
   "private": true,
   "author": "Parity Technologies <admin@parity.io>",
   "license": "Unlicense",
-  "homepage": "https://dashboard.integritee.network",
+  "homepage": "https://enclaves.integritee.network",
   "bugs": {
     "url": "https://github.com/integritee-network/dashboard/issues"
   },
