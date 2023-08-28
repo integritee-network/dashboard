@@ -35,6 +35,7 @@ export default function Main(props) {
     return (
     <Grid.Column>
       <h1>Proxied Enclaves</h1>
+        <p>Learn how to register your custom enclave here with our <a href="https://docs.integritee.network/4-development/4.5-attesteer">Attesteer</a></p>
       {proxiedEnclaves.length === 0 ? (
         <Label basic color="yellow">
           No enclaves to be shown

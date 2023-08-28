@@ -34,6 +34,7 @@ export default function Main(props) {
     return (
     <Grid.Column>
       <h1>Sovereign Enclaves</h1>
+        <p>Learn how to build sovereign enclaves for sidechains, offchain workers and oracles using the <a href="https://docs.integritee.network/4-development">Integritee SDK</a></p>
       {enclaves.length === 0 ? (
         <Label basic color="yellow">
           No enclaves to be shown
